@@ -31,6 +31,13 @@ public class CustomerRestApplication extends Application<CustomerRestConfigurati
     @Override
     public void run(CustomerRestConfiguration customerRestConfiguration,
                     Environment environment) throws Exception {
-       
+        final CustomerResource resource = new CustomerResource(
+                customerRestConfiguration.getTemplate(),
+                customerRestConfiguration.getDefaultName());
+
+        final TemplateHealthCheck healthCheck = new TemplateHealthCheck(customerRestConfiguration.getTemplate());
+        environment.healthChecks().register("template", healthCheck);
+
+        environment.jersey().register(resource);
     }
 }
